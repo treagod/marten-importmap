@@ -1,7 +1,7 @@
 require "marten"
 require "importmap"
 
-require "./importmap/app"
+require "./importmap/**"
 
 module MartenImportmap
   VERSION = "0.1.0"
