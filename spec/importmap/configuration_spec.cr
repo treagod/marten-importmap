@@ -1,9 +1,9 @@
 require "../spec_helper"
 
-describe Importmap::Configuration do
+describe MartenImportmap::Configuration do
   describe "#draw" do
     it "allows defining entries through the ImportMap manager" do
-      config = Importmap::Configuration.new
+      config = MartenImportmap::Configuration.new
 
       config.draw do
         pin "application", "application.js"
@@ -14,7 +14,7 @@ describe Importmap::Configuration do
     end
 
     it "exposes the full ImportMap DSL within the draw block" do
-      config = Importmap::Configuration.new
+      config = MartenImportmap::Configuration.new
 
       config.draw do
         namespace "admin" do

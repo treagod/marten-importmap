@@ -1,4 +1,4 @@
-module Importmap
+module MartenImportmap
   module Template
     module Tag
       class ImportMapTag < Marten::Template::Tag::Base

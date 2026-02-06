@@ -1,7 +1,7 @@
 require "./configuration"
 require "./template/**"
 
-module Importmap
+module MartenImportmap
   class App < Marten::App
     label "importmap"
 

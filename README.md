@@ -1,4 +1,4 @@
-# Marten Importmap
+# MartenImportmap
 
 Integration between [Marten](https://martenframework.com) and the [ImportMap](https://github.com/treagod/importmap) shard.
 
@@ -16,7 +16,7 @@ Then update your Marten project's installed apps:
 
 ```crystal
 config.installed_apps = [
-  Importmap::App,
+  MartenImportmap::App,
   # ...
 ]
 ```

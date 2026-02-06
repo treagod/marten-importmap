@@ -2,10 +2,10 @@ require "../../../spec_helper"
 
 private def build_tag(markup)
   parser = Marten::Template::Parser.new("")
-  Importmap::Template::Tag::ImportMapTag.new(parser, markup)
+  MartenImportmap::Template::Tag::ImportMapTag.new(parser, markup)
 end
 
-describe Importmap::Template::Tag::ImportMapTag do
+describe MartenImportmap::Template::Tag::ImportMapTag do
   describe "::new" do
     it "raises when the entrypoint argument is missing the entrypoint: prefix" do
       expect_raises(Marten::Template::Errors::InvalidSyntax) do

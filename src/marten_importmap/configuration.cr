@@ -1,4 +1,4 @@
-module Importmap
+module MartenImportmap
   class Configuration < Marten::Conf::Settings
     namespace :importmap
 
