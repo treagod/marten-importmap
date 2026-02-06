@@ -18,6 +18,12 @@ describe Importmap::Template::Tag::ImportMapTag do
         build_tag("importmap app entrypoint:dashboard extra")
       end
     end
+
+    it "raises when the entrypoint argument is missing a value" do
+      expect_raises(Marten::Template::Errors::InvalidSyntax) do
+        build_tag("importmap app entrypoint:")
+      end
+    end
   end
 
   describe "#render" do
@@ -62,6 +68,21 @@ describe Importmap::Template::Tag::ImportMapTag do
       output.should contain %(<script type="module">import "dashboard/main"</script>)
     end
 
+    it "supports setting a custom entrypoint using the equals syntax" do
+      ImportMap.draw do
+        pin "application", "application.js"
+        namespace "dashboard" do
+          pin "main", "dashboard/main.js"
+        end
+      end
+
+      output = build_tag("importmap 'dashboard' entrypoint='dashboard/main'").render(
+        Marten::Template::Context.new
+      )
+
+      output.should contain %(<script type="module">import "dashboard/main"</script>)
+    end
+
     it "evaluates namespace and entrypoint expressions from the context" do
       ImportMap.draw do
         pin "application", "application.js"
@@ -76,6 +97,36 @@ describe Importmap::Template::Tag::ImportMapTag do
 
       output.should contain "data-namespace=\"customers\""
       output.should contain %(<script type="module">import "customers/reports"</script>)
+    end
+
+    it "falls back to the default tag when the namespace expression resolves blank" do
+      ImportMap.draw do
+        pin "application", "application.js"
+      end
+
+      context = Marten::Template::Context{"ns" => "", "ep" => "ignored"}
+
+      output = build_tag("importmap ns entrypoint:ep").render(context)
+
+      output.should contain "<script type=\"importmap\">"
+      output.should contain %(<script type="module">import "application"</script>)
+      output.should_not contain "data-namespace="
+    end
+
+    it "falls back to the default entrypoint when the entrypoint expression resolves blank" do
+      ImportMap.draw do
+        pin "application", "application.js"
+        namespace "dashboard" do
+          pin "application", "dashboard/application.js"
+        end
+      end
+
+      context = Marten::Template::Context{"ns" => "dashboard", "ep" => ""}
+
+      output = build_tag("importmap ns entrypoint:ep").render(context)
+
+      output.should contain "data-namespace=\"dashboard\""
+      output.should contain %(<script type="module">import "application"</script>)
     end
   end
 end
