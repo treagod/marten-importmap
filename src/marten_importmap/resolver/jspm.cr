@@ -32,8 +32,6 @@ module MartenImportmap
         when "unpkg"           then Provider::Unpkg
         when "skypack"         then Provider::Skypack
         when "esm.sh", "esmsh" then Provider::EsmSh
-        else
-          nil
         end
       end
 
@@ -69,7 +67,7 @@ module MartenImportmap
     end
 
     module Jspm
-      API = URI.parse("https://api.jspm.io/generate")
+      API         = URI.parse("https://api.jspm.io/generate")
       DEFAULT_ENV = ["browser", "production", "module"]
 
       def self.generate(
@@ -77,7 +75,7 @@ module MartenImportmap
         env : Array(String) = DEFAULT_ENV,
         provider : Provider = Provider::JspmIo,
         flatten_scope : Bool = true,
-        input_map : ImportMapPayload? = nil
+        input_map : ImportMapPayload? = nil,
       ) : GenerateResponse
         body = build_payload(
           install: install,
@@ -114,7 +112,7 @@ module MartenImportmap
         env : Array(String) = DEFAULT_ENV,
         provider : Provider = Provider::JspmIo,
         flatten_scope : Bool = true,
-        input_map : ImportMapPayload? = nil
+        input_map : ImportMapPayload? = nil,
       ) : GenerateResponse
         generate(
           install: [install_spec],
@@ -128,22 +126,21 @@ module MartenImportmap
       def self.pin_key_guess(install_spec : String) : String
         spec = install_spec
 
-        if spec.starts_with?('@')
-          slash = spec.index('/') || return spec
-          ver_at = spec.index('@', slash + 1)
-          return spec unless ver_at
-        else
-          ver_at = spec.index('@')
-          return spec unless ver_at
-        end
+        ver_at = if spec.starts_with?('@')
+                   slash = spec.index('/') || return spec
+                   spec.index('@', slash + 1)
+                 else
+                   spec.index('@')
+                 end
+        return spec unless ver_at
 
-        slash_after_ver = spec.index('/', ver_at.not_nil! + 1)
+        slash_after_ver = spec.index('/', ver_at + 1)
         if slash_after_ver
-          name = spec[0, ver_at.not_nil!]
+          name = spec[0, ver_at]
           sub = spec[slash_after_ver..-1]
           "#{name}#{sub}"
         else
-          spec[0, ver_at.not_nil!]
+          spec[0, ver_at]
         end
       end
 
@@ -152,7 +149,7 @@ module MartenImportmap
         env : Array(String),
         provider : Provider,
         flatten_scope : Bool,
-        input_map : ImportMapPayload?
+        input_map : ImportMapPayload?,
       ) : String
         String.build do |io|
           JSON.build(io) do |json|
@@ -172,9 +169,9 @@ module MartenImportmap
               json.field "flattenScope", flatten_scope
               json.field "defaultProvider", provider.to_jspm_default_provider
 
-              unless input_map.nil?
+              if map = input_map
                 json.field "inputMap" do
-                  input_map.not_nil!.to_json(json)
+                  map.to_json(json)
                 end
               end
             end

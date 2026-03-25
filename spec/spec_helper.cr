@@ -7,6 +7,7 @@ require "marten/spec"
 require "sqlite3"
 
 require "../src/marten_importmap"
+require "../src/marten_importmap/cli"
 require "./support/import_map"
 
 module Marten
