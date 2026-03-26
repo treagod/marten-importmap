@@ -170,6 +170,7 @@ describe MartenImportmap::CLI::Manage::Command::Importmap do
       manual_content = File.read(manual_initializer_path)
       manual_content.includes?("Marten.configure do |config|").should be_true
       manual_content.includes?("config.importmap.draw do").should be_true
+      manual_content.includes?(%(pin "application", "application.js")).should be_true
       manual_content.includes?("ImportMap.draw").should be_false
 
       generated_initializer_path = MartenImportmap::CLI::Manage::Command::ImportmapSpec::TestImportmapCommand.generated_initializer_path

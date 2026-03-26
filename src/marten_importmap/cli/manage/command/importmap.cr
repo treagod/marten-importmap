@@ -476,6 +476,7 @@ module MartenImportmap
             String.build do |io|
               io.puts "Marten.configure do |config|"
               io.puts "  config.importmap.draw do"
+              io.puts %(    pin "application", "application.js")
               io.puts "  end"
               io.puts "end"
             end
