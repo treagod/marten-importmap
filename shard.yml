@@ -13,6 +13,7 @@ dependencies:
     github: martenframework/marten
   importmap:
     github: treagod/importmap
+    version: "~> 0.1"
 
 development_dependencies:
   ameba:
